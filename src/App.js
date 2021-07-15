@@ -1,24 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
+import { Cabecera } from "./componentes/Cabecera";
+import { Logout } from "./componentes/Logout";
+import { RutaProtegida } from "./componentes/RutaProtegida";
+import { AuthContextProvider } from "./contextos/AuthContextProvider";
+import { InicioPagina } from "./paginas/InicioPagina";
+import { ListadoPagina } from "./paginas/ListadoPagina";
+import { LoginPagina } from "./paginas/LoginPagina";
+import { NotFoundPagina } from "./paginas/NotFoundPagina";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AuthContextProvider>
+        <Cabecera />
+        <Switch>
+          <Route path="/inicio" exact>
+            <RutaProtegida>
+              <InicioPagina />
+            </RutaProtegida>
+          </Route>
+          <Route path="/listado" exact>
+            <RutaProtegida>
+              <ListadoPagina />
+            </RutaProtegida>
+          </Route>
+          <Route path="/login" exact>
+            <LoginPagina />
+          </Route>
+          <Route path="/logout" exact>
+            <RutaProtegida>
+              <Logout />
+            </RutaProtegida>
+          </Route>
+          <Route path="/" exact>
+            <Redirect to="/inicio" />
+          </Route>
+          <Route path="**">
+            <NotFoundPagina />
+          </Route>
+        </Switch>
+      </AuthContextProvider>
+    </Router>
   );
 }
 
